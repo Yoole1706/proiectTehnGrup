@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { AuthProvider } from "@/context/AuthContext";
 import { NotesProvider } from "@/context/NotesContext";
+import Header from "@/components/Header";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
-        <NotesProvider>{children}</NotesProvider>
+        <AuthProvider>
+          <Header />
+          <NotesProvider>
+            <main className="flex flex-1 flex-col pt-14">{children}</main>
+          </NotesProvider>
+        </AuthProvider>
       </body>
     </html>
   );
