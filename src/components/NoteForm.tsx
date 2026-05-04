@@ -4,18 +4,19 @@ import { useEffect, useState } from "react";
 import { useNotesDispatch, type Note } from "@/context/NotesContext";
 
 type NoteFormProps = {
+  initialNote?: Note;
   onClose: () => void;
 };
 
-export default function NoteForm({ onClose }: NoteFormProps) {
+export default function NoteForm({ initialNote, onClose }: NoteFormProps) {
   const dispatch = useNotesDispatch();
 
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [category, setCategory] = useState("");
-  const [tagsInput, setTagsInput] = useState("");
+  const [title, setTitle] = useState(initialNote?.title || "");
+  const [body, setBody] = useState(initialNote?.body || "");
+  const [category, setCategory] = useState(initialNote?.category || "");
+  const [tagsInput, setTagsInput] = useState(initialNote?.tags.join(", ") || "");
 
-  /* Close on Escape */
+  
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -35,17 +36,33 @@ export default function NoteForm({ onClose }: NoteFormProps) {
       .map((t) => t.trim())
       .filter(Boolean);
 
-    const newNote: Note = {
-      id: crypto.randomUUID(),
-      title: title.trim(),
-      body: body.trim(),
-      category: category.trim() || "Uncategorized",
-      tags,
-      createdAt: now,
-      updatedAt: now,
-    };
+    if (initialNote) {
+      dispatch({
+        type: "UPDATE_NOTE",
+        payload: {
+          id: initialNote.id,
+          changes: {
+            title: title.trim(),
+            body: body.trim(),
+            category: category.trim() || "Uncategorized",
+            tags,
+          },
+        },
+      });
+    } else {
+      const now = new Date().toISOString();
+      const newNote: Note = {
+        id: crypto.randomUUID(),
+        title: title.trim(),
+        body: body.trim(),
+        category: category.trim() || "Uncategorized",
+        tags,
+        createdAt: now,
+        updatedAt: now,
+      };
 
-    dispatch({ type: "ADD_NOTE", payload: newNote });
+      dispatch({ type: "ADD_NOTE", payload: newNote });
+    }
     onClose();
   }
 
@@ -53,20 +70,20 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     "w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 min-h-[44px]";
 
   return (
-    /* Backdrop */
+    
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm md:items-center"
       onClick={onClose}
     >
-      {/* Dialog */}
+      
       <div
         className="flex w-full max-w-lg flex-col gap-5 rounded-t-2xl border border-zinc-800 bg-zinc-900 p-6 md:rounded-2xl md:max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-zinc-100">
-            Create Note
+            {initialNote ? "Edit Note" : "Create Note"}
           </h2>
           <button
             onClick={onClose}
@@ -77,9 +94,9 @@ export default function NoteForm({ onClose }: NoteFormProps) {
           </button>
         </div>
 
-        {/* Fields */}
+        
         <div className="flex flex-col gap-4">
-          {/* Title */}
+          
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-zinc-400">Title</label>
             <input
@@ -91,7 +108,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
             />
           </div>
 
-          {/* Body */}
+          
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-zinc-400">Body</label>
             <textarea
@@ -103,7 +120,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
             />
           </div>
 
-          {/* Category */}
+          
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-zinc-400">
               Category
@@ -117,7 +134,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
             />
           </div>
 
-          {/* Tags */}
+          
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-zinc-400">
               Tags{" "}
@@ -135,7 +152,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
           </div>
         </div>
 
-        {/* Actions */}
+        
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             onClick={onClose}
@@ -148,7 +165,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
             disabled={!canSubmit}
             className="rounded-md bg-zinc-100 px-4 py-2.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 min-h-[44px]"
           >
-            Create Note
+            {initialNote ? "Save Changes" : "Create Note"}
           </button>
         </div>
       </div>

@@ -10,7 +10,7 @@ import {
 import { onAuthStateChanged, signOut as firebaseSignOut, type User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
-/* ── Types ─────────────────────────────────────────────────── */
+
 
 type AuthContextValue = {
   user: User | null;
@@ -18,7 +18,7 @@ type AuthContextValue = {
   signOut: () => Promise<void>;
 };
 
-/* ── Context ───────────────────────────────────────────────── */
+
 
 const AuthContext = createContext<AuthContextValue>({
   user: null,
@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextValue>({
   signOut: async () => {},
 });
 
-/* ── Provider ──────────────────────────────────────────────── */
+
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(firebaseUser);
       setLoading(false);
 
-      /* Set / clear a simple session cookie for middleware route protection */
+      
       if (firebaseUser) {
         document.cookie = "__session=1; path=/; max-age=31536000; SameSite=Lax";
       } else {
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await firebaseSignOut(auth);
   }
 
-  /* Full-screen loading state */
+  
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-950">
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/* ── Hook ──────────────────────────────────────────────────── */
+
 
 export function useAuth() {
   return useContext(AuthContext);

@@ -27,7 +27,7 @@ export default function NoteCard({ note, onClick }: NoteCardProps) {
       }}
       className="flex flex-col gap-3 rounded-lg border border-zinc-800 bg-zinc-900 p-5 cursor-pointer transition-colors hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-500 min-h-[44px]"
     >
-      {/* Category + Date */}
+      
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
           {note.category}
@@ -37,15 +37,15 @@ export default function NoteCard({ note, onClick }: NoteCardProps) {
         </time>
       </div>
 
-      {/* Title */}
+      
       <h3 className="text-base font-semibold text-zinc-100 leading-snug">
         {note.title}
       </h3>
 
-      {/* Body preview */}
+      
       <p className="text-sm leading-relaxed text-zinc-400">{preview}</p>
 
-      {/* Tags */}
+      
       {note.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1">
           {note.tags.map((tag) => (

@@ -18,7 +18,7 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterChip | null>(null);
 
-  /* Build unique chips from notes data */
+  
   const chips = useMemo(() => {
     const categories = new Set<string>();
     const tags = new Set<string>();
@@ -36,7 +36,7 @@ export default function Home() {
     return result;
   }, [notes]);
 
-  /* Filter notes based on active chip */
+  
   const filteredNotes = useMemo(() => {
     if (!activeFilter) return notes;
     if (activeFilter.kind === "category") {
@@ -61,7 +61,7 @@ export default function Home() {
     );
   }
 
-  /* Split chips by kind for labeling */
+  
   const categoryChips = chips.filter((c) => c.kind === "category");
   const tagChips = chips.filter((c) => c.kind === "tag");
   const hasChips = chips.length > 0;
@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col bg-zinc-950 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-5xl">
-        {/* Header */}
+        
         <div className="flex items-center justify-between pb-6">
           <h1 className="text-xl font-semibold text-zinc-100">All Notes</h1>
           <button
@@ -80,7 +80,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Filter chips */}
+        
         {notes.length > 0 && hasChips && (
           <div className="flex flex-row items-center gap-2 overflow-x-auto pb-4 scrollbar-none">
             {categoryChips.length > 0 && (
@@ -126,7 +126,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* Grid */}
+        
         {filteredNotes.length === 0 && notes.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-2 py-20">
             <p className="text-sm text-zinc-500">No notes yet.</p>
@@ -156,7 +156,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* Note detail modal */}
+      
       {selectedNote && (
         <NoteModal
           note={selectedNote}
@@ -164,7 +164,7 @@ export default function Home() {
         />
       )}
 
-      {/* Create note modal */}
+      
       {showForm && <NoteForm onClose={() => setShowForm(false)} />}
     </div>
   );

@@ -12,7 +12,7 @@ export default function Header() {
     router.replace("/auth");
   }
 
-  /* Only render when user is authenticated */
+  
   if (!user) return null;
 
   return (

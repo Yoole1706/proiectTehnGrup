@@ -9,9 +9,9 @@ import {
   type ReactNode,
 } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { getNotes, addNote } from "@/lib/firestore";
+import { getNotes, addNote, updateNote as firestoreUpdateNote } from "@/lib/firestore";
 
-/* ── Note type ─────────────────────────────────────────────── */
+
 
 export type Note = {
   id: string;
@@ -23,11 +23,13 @@ export type Note = {
   updatedAt: string;
 };
 
-/* ── Actions ───────────────────────────────────────────────── */
 
-type NotesAction = { type: "ADD_NOTE"; payload: Note };
 
-/* ── Context ───────────────────────────────────────────────── */
+type NotesAction =
+  | { type: "ADD_NOTE"; payload: Note }
+  | { type: "UPDATE_NOTE"; payload: { id: string; changes: Partial<Omit<Note, "id" | "createdAt">> } };
+
+
 
 const NotesContext = createContext<Note[]>([]);
 const NotesDispatchContext = createContext<(action: NotesAction) => void>(
@@ -38,7 +40,7 @@ export function NotesProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
 
-  /* Load notes from Firestore when user becomes available */
+  
   const loadNotes = useCallback(async (uid: string) => {
     try {
       const fetched = await getNotes(uid);
@@ -56,7 +58,7 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     }
   }, [user, loadNotes]);
 
-  /* Dispatch wrapper — writes to Firestore then refreshes local state */
+  
   const dispatch = useCallback(
     async (action: NotesAction) => {
       if (!user) return;
@@ -64,15 +66,35 @@ export function NotesProvider({ children }: { children: ReactNode }) {
       switch (action.type) {
         case "ADD_NOTE": {
           const { id: _id, ...noteWithoutId } = action.payload;
-          /* Optimistically add to local state */
+          
           setNotes((prev) => [action.payload, ...prev]);
           try {
-            /* Persist to Firestore */
+            
             await addNote(user.uid, noteWithoutId);
-            /* Re-fetch to sync real Firestore IDs */
+            
             await loadNotes(user.uid);
           } catch (error) {
             console.error("[NotesContext] addNote failed:", error);
+          }
+          break;
+        }
+        case "UPDATE_NOTE": {
+          const { id, changes } = action.payload;
+          
+          setNotes((prev) =>
+            prev.map((note) =>
+              note.id === id
+                ? { ...note, ...changes, updatedAt: new Date().toISOString() }
+                : note
+            )
+          );
+          try {
+            
+            await firestoreUpdateNote(user.uid, id, changes);
+            
+            await loadNotes(user.uid);
+          } catch (error) {
+            console.error("[NotesContext] updateNote failed:", error);
           }
           break;
         }

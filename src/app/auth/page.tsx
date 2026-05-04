@@ -25,7 +25,7 @@ export default function AuthPage() {
   const [fieldError, setFieldError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  /* Redirect already-authenticated users to / */
+  
   useEffect(() => {
     if (!loading && user) {
       router.replace("/");
@@ -84,7 +84,7 @@ export default function AuthPage() {
     }
   }
 
-  /* Don't render the form while checking auth or if user is already logged in */
+  
   if (loading || user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-950">
@@ -99,7 +99,7 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
       <div className="flex w-full max-w-sm flex-col gap-6 rounded-xl border border-zinc-800 bg-zinc-900 p-8">
-        {/* Title */}
+        
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold text-zinc-100">
             {mode === "signin" ? "Sign In" : "Sign Up"}
@@ -111,16 +111,16 @@ export default function AuthPage() {
           </p>
         </div>
 
-        {/* Error banner */}
+        
         {error && (
           <div className="rounded-md border border-red-900 bg-red-950/50 px-3 py-2 text-sm text-red-400">
             {error}
           </div>
         )}
 
-        {/* Fields */}
+        
         <div className="flex flex-col gap-4">
-          {/* Email */}
+          
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-zinc-400">Email</label>
             <input
@@ -132,7 +132,7 @@ export default function AuthPage() {
             />
           </div>
 
-          {/* Password */}
+          
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-zinc-400">
               Password
@@ -146,7 +146,7 @@ export default function AuthPage() {
             />
           </div>
 
-          {/* Confirm Password — sign up only */}
+          
           {mode === "signup" && (
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-zinc-400">
@@ -166,7 +166,7 @@ export default function AuthPage() {
           )}
         </div>
 
-        {/* Submit */}
+        
         <button
           onClick={handleEmailSubmit}
           disabled={submitting}
@@ -179,14 +179,14 @@ export default function AuthPage() {
               : "Sign Up"}
         </button>
 
-        {/* Divider */}
+        
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-zinc-800" />
           <span className="text-xs text-zinc-500">or</span>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        {/* Google */}
+        
         <button
           onClick={handleGoogleSignIn}
           disabled={submitting}
@@ -213,7 +213,7 @@ export default function AuthPage() {
           Continue with Google
         </button>
 
-        {/* Toggle mode */}
+        
         <p className="text-center text-sm text-zinc-400">
           {mode === "signin"
             ? "Don't have an account? "
@@ -230,7 +230,7 @@ export default function AuthPage() {
   );
 }
 
-/* ── Helpers ───────────────────────────────────────────────── */
+
 
 function firebaseErrorMessage(code: string): string {
   switch (code) {

@@ -4,13 +4,13 @@ import {
   getDocs,
   query,
   orderBy,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Note } from "@/context/NotesContext";
 
-/**
- * Fetch all notes for a given user, ordered by createdAt descending.
- */
+
 export async function getNotes(uid: string): Promise<Note[]> {
   try {
     const notesRef = collection(db, "users", uid, "notes");
@@ -32,9 +32,7 @@ export async function getNotes(uid: string): Promise<Note[]> {
   }
 }
 
-/**
- * Add a new note for a given user. Firestore auto-generates the document ID.
- */
+
 export async function addNote(
   uid: string,
   note: Omit<Note, "id">
@@ -44,5 +42,22 @@ export async function addNote(
     await addDoc(notesRef, note);
   } catch (error) {
     console.error("[firestore] addNote failed:", error);
+  }
+}
+
+
+export async function updateNote(
+  uid: string,
+  noteId: string,
+  data: Partial<Omit<Note, "id" | "createdAt">>
+): Promise<void> {
+  try {
+    const noteRef = doc(db, "users", uid, "notes", noteId);
+    await updateDoc(noteRef, {
+      ...data,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("[firestore] updateNote failed:", error);
   }
 }
