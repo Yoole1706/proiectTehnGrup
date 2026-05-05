@@ -6,6 +6,7 @@ import {
   orderBy,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Note } from "@/context/NotesContext";
@@ -59,5 +60,15 @@ export async function updateNote(
     });
   } catch (error) {
     console.error("[firestore] updateNote failed:", error);
+  }
+}
+
+
+export async function deleteNote(uid: string, noteId: string): Promise<void> {
+  try {
+    const noteRef = doc(db, "users", uid, "notes", noteId);
+    await deleteDoc(noteRef);
+  } catch (error) {
+    console.error("[firestore] deleteNote failed:", error);
   }
 }
