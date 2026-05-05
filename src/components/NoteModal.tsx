@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Note } from "@/context/NotesContext";
+import { useNotesDispatch } from "@/context/NotesContext";
 import NoteForm from "@/components/NoteForm";
 
 type NoteModalProps = {
@@ -11,6 +12,13 @@ type NoteModalProps = {
 
 export default function NoteModal({ note, onClose }: NoteModalProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useNotesDispatch();
+
+  function handleDelete() {
+    if (!confirm("Ești sigur că vrei să ștergi această notiță?")) return;
+    dispatch({ type: "DELETE_NOTE", payload: { id: note.id } });
+    onClose();
+  }
 
   
   useEffect(() => {
@@ -61,6 +69,12 @@ export default function NoteModal({ note, onClose }: NoteModalProps) {
               className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 transition-colors hover:bg-zinc-800 min-h-[44px]"
             >
               Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              className="rounded-md border border-red-800/50 px-3 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-900/30 min-h-[44px]"
+            >
+              Delete
             </button>
             <button
               onClick={onClose}

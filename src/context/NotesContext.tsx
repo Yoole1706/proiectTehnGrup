@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { getNotes, addNote, updateNote as firestoreUpdateNote } from "@/lib/firestore";
+import { getNotes, addNote, updateNote as firestoreUpdateNote, deleteNote as firestoreDeleteNote } from "@/lib/firestore";
 
 
 
@@ -27,7 +27,8 @@ export type Note = {
 
 type NotesAction =
   | { type: "ADD_NOTE"; payload: Note }
-  | { type: "UPDATE_NOTE"; payload: { id: string; changes: Partial<Omit<Note, "id" | "createdAt">> } };
+  | { type: "UPDATE_NOTE"; payload: { id: string; changes: Partial<Omit<Note, "id" | "createdAt">> } }
+  | { type: "DELETE_NOTE"; payload: { id: string } };
 
 
 
@@ -95,6 +96,17 @@ export function NotesProvider({ children }: { children: ReactNode }) {
             await loadNotes(user.uid);
           } catch (error) {
             console.error("[NotesContext] updateNote failed:", error);
+          }
+          break;
+        }
+        case "DELETE_NOTE": {
+          const { id } = action.payload;
+          setNotes((prev) => prev.filter((note) => note.id !== id));
+          try {
+            await firestoreDeleteNote(user.uid, id);
+          } catch (error) {
+            console.error("[NotesContext] deleteNote failed:", error);
+            await loadNotes(user.uid);
           }
           break;
         }
