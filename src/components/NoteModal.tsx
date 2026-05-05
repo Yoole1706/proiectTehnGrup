@@ -20,7 +20,7 @@ export default function NoteModal({ note, onClose }: NoteModalProps) {
     onClose();
   }
 
-  
+
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -43,17 +43,17 @@ export default function NoteModal({ note, onClose }: NoteModalProps) {
   }
 
   return (
-    
+
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm md:items-center"
       onClick={onClose}
     >
-      
+
       <div
         className="flex w-full max-w-lg flex-col gap-5 rounded-t-2xl border border-zinc-800 bg-zinc-900 p-6 md:rounded-2xl md:max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        
+
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
@@ -86,12 +86,12 @@ export default function NoteModal({ note, onClose }: NoteModalProps) {
           </div>
         </div>
 
-        
+
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
           {note.body}
         </p>
 
-        
+
         {note.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {note.tags.map((tag) => (
@@ -105,7 +105,7 @@ export default function NoteModal({ note, onClose }: NoteModalProps) {
           </div>
         )}
 
-        
+
         <div className="flex flex-col gap-0.5 border-t border-zinc-800 pt-4 text-xs text-zinc-500">
           <span>Created: {fmt(note.createdAt)}</span>
           <span>Updated: {fmt(note.updatedAt)}</span>
