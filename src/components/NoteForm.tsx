@@ -67,7 +67,7 @@ export default function NoteForm({ initialNote, onClose }: NoteFormProps) {
 	}
 
 	const inputClasses =
-		"w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 min-h-[44px]";
+		"w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-pink-500 min-h-[44px]";
 
 	return (
 		<div
